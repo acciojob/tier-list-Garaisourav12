@@ -1,34 +1,21 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const items = document.querySelectorAll('.item');
-  const dropZones = document.querySelectorAll('.drop-zone');
-  const unrankedZone = document.getElementById('unranked-drop-zone');
+//your JS code here. If required.
+let selectedSquare;
+const unrankedDropZone = document.getElementById("unranked-drop-zone");
 
-  items.forEach(item => {
-    item.setAttribute('draggable', true);
-
-    item.addEventListener('dragstart', (event) => {
-      event.dataTransfer.setData('text/plain', event.target.id);
-    });
-
-    item.addEventListener('dblclick', () => {
-      if (item.parentElement !== unrankedZone) {
-        unrankedZone.appendChild(item);
-      }
-    });
+//--ITEMS
+document.querySelectorAll(".item").forEach((square) => {
+  square.addEventListener("dragstart", (e) => (selectedSquare = e.target));
+  square.addEventListener("dblclick", function () {
+    if (this.parentElement != unrankedDropZone)
+      unrankedDropZone.appendChild(this);
   });
+});
 
-  dropZones.forEach(zone => {
-    zone.addEventListener('dragover', (event) => {
-      event.preventDefault();
-    });
-
-    zone.addEventListener('drop', (event) => {
-      event.preventDefault();
-      const itemId = event.dataTransfer.getData('text/plain');
-      const draggedItem = document.getElementById(itemId);
-      if (draggedItem && draggedItem.parentElement !== zone) {
-        zone.appendChild(draggedItem);
-      }
-    });
+//--ZONES
+document.querySelectorAll(".drop-zone").forEach((dropZone) => {
+  dropZone.addEventListener("dragover", (e) => e.preventDefault());
+  dropZone.addEventListener("drop", function () {
+    if (selectedSquare.parentElement === this) return;
+    this.appendChild(selectedSquare);
   });
 });
